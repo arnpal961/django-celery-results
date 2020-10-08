@@ -10,12 +10,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_celery_results', '0006_taskresult_date_created'),
+        ('django_celery_results', '0007_remove_taskresult_hidden'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='taskresult',
-            name='hidden',
-        ),
+
     ]

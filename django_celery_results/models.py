@@ -1,12 +1,10 @@
 """Database models."""
-from __future__ import absolute_import, unicode_literals
 
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from celery import states
-from celery.five import python_2_unicode_compatible
 
 from . import managers
 
@@ -14,7 +12,6 @@ ALL_STATES = sorted(states.ALL_STATES)
 TASK_STATE_CHOICES = sorted(zip(ALL_STATES, ALL_STATES))
 
 
-@python_2_unicode_compatible
 class TaskResult(models.Model):
     """Task result/status."""
 
@@ -71,6 +68,11 @@ class TaskResult(models.Model):
         auto_now=True, db_index=True,
         verbose_name=_('Completed DateTime'),
         help_text=_('Datetime field when the task was completed in UTC'))
+    exec_class = models.CharField(
+        max_length=128,
+        blank=True, null=True,
+        verbose_name=_("Excepttion Class Name"),
+        help_text=_("Exception class of the task"))
     traceback = models.TextField(
         blank=True, null=True,
         verbose_name=_('Traceback'),
@@ -104,6 +106,9 @@ class TaskResult(models.Model):
             'meta': self.meta,
             'worker': self.worker
         }
+    
+    def build_graph(self):
+        pass
 
     def __str__(self):
         return '<Task: {0.task_id} ({0.status})>'.format(self)

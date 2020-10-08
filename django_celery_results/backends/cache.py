@@ -1,5 +1,4 @@
 """Celery cache backend using the Django Cache Framework."""
-from __future__ import absolute_import, unicode_literals
 
 from django.core.cache import cache as default_cache, caches
 

@@ -1,5 +1,4 @@
-from __future__ import absolute_import, unicode_literals
-
+from celery.states import FAILURE
 from celery.backends.base import BaseDictBackend
 from celery.utils.serialization import b64encode, b64decode
 
@@ -28,9 +27,12 @@ class DatabaseBackend(BaseDictBackend):
                               'kwargsrepr', getattr(request, 'kwargs', None))
         worker = getattr(request, 'hostname', None)
 
+        exec_class = traceback.__class__.__name__ if status == FAILURE else None
+
         self.TaskModel._default_manager.store_result(
             content_type, content_encoding,
             task_id, result, status,
+            exec_class=exec_class,
             traceback=traceback,
             meta=meta,
             task_name=task_name,
